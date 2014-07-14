@@ -58,27 +58,70 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		return true;
 	}
 
+
+
+
 	@Override
 	public void onClick(View v) {
 		// TODO 自動生成されたメソッド・スタブ
+
+        // 生成して代入用のIntentインスタンス変数を用意
 		Intent intent = null;
-		switch(v.getId()) {//メンテボタン
-			case R.id.mente:
-				intent = new Intent(MainActivity.this, MaintenanceActivity.class);
-				startActivity(intent);
-				break;
+		switch(v.getId()) { //どのボタンが押されたか判定
+		  case R.id.touroku: //登録ボタンが押された
+			  // エディットテキストからの入力内容を取り出す
+			  EditText etv = (EditText)findViewById(R.id.edtMsg);
+			  String inputMsg = etv.getText().toString();
 
-			case R.id.check://チェックボタン
-				intent = new Intent(MainActivity.this, HitokotoActivity.class);
-				startActivity(intent);
-				break;
+			  //inputMsgがnullでない、かつ、空でない場合のみ、if文内を実行
+			  if(inputMsg!=null && !inputMsg.isEmpty()){
+				  //MySQLiteOpenHelperのインサートメソッドを呼び出し
+				  helper.insertHitokoto(sdb,inputMsg);
+			  }
 
-			case R.id.touroku: //登録ボタン
-				EditText etv = (EditText)findViewById(R.id.txt1);
-				String inputMsg = etv.getText().toString();
+			  //入力欄をクリア
+			  etv.setText("");
+			  break;
+		  case R.id.mente: //メンテボタンが押された
 
-				break;
-	}
+		     //インテントのインスタンス生成
+		  intent = new Intent(MainActivity.this, MaintenanceActivity.class);
+			  //次画面のアクティビティ起動
+			  startActivity(intent);
+			  break;
+		  case R.id.check: //一言チェックボタンが押された
+
+			  //MySQLLiteOpenHelperのセレクト一言メソッドを呼び出して一言ランダムに取得
+			  String strHitokoto = helper.selectRandomHitokoto(sdb);
+
+
+		      //インテントのインスタンス生成
+		      intent = new Intent(MainActivity.this,HitokotoActivity.class);
+			  //インテントに一言を混入
+			  intent.putExtra("hitokoto", strHitokoto);
+
+			  //次画面のアクティビティ起動
+			  startActivity(intent);
+			  break;
+			  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 }
